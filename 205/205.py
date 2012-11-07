@@ -1,5 +1,7 @@
 #!/bin/env python3
 import numpy as np
+import scipy.stats
+import scipy.signal
 
 def cartesian(arrays, out=None):
     """
@@ -66,9 +68,9 @@ class DiceRoller(object):
 		'''
 		return cartesian(self.num_dice*[self.face_values])
 
-	def pdf(self):
+	def pmf(self):
 		'''
-		return the probability density function as a set of f(x) values with x
+		return the probability mass function as a set of f(x) values with x
 		taking all integers 0 through the length of the returned array
 		'''
 		out = np.bincount(np.sum(self.results(), axis=1))
@@ -79,12 +81,24 @@ class DiceRoller(object):
 PETER = DiceRoller(9, range(1,5))
 COLIN = DiceRoller(6, range(1,7))
 
-# Compute PDFs for Colin and Peter
-colin_data = COLIN.pdf()
-peter_data = PETER.pdf()
+# Compute PMFs for Colin and Peter
+colin_data = COLIN.pmf()
+peter_data = PETER.pmf()
 
-# Subtract the two PDFs to compute diff.  Where diff > 0 Peter will have beaten
-# Colin.
-diff = peter_data - colin_data
+# Subtract the two PMFs to compute diff.  Where diff > 0 Peter will have beaten
+# Colin.  Subtraction is done with discrete correlation function.
+
+#pd = np.hstack([np.zeros(peter_data.size), peter_data])
+#cd = np.hstack([colin_data[::-1], np.zeros(colin_data.size)])
+#diff = np.convolve(pd, cd)
+
+diff = scipy.signal.correlate(peter_data, colin_data)
+print(diff)
 p = np.sum(diff[diff > 0])
 print('%0.7f' % p)
+
+
+#mean = np.mean(peter_data) - np.mean(colin_data)
+#var = np.var(peter_data) + np.var(colin_data)
+#diff_est = scipy.stats.norm(0, mean, np.sqrt(var))
+#print(diff_est.cdf(0))
