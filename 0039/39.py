@@ -29,7 +29,7 @@ class Triangle(tuple):
 
 
 def get_triangles(p_goal):
-	goal_triangles = set()
+	triangles = set()
 	for n in range(1, p_goal):
 		max_m = p_goal - n**2
 		for m in range(n+1, max_m):
@@ -44,11 +44,17 @@ def get_triangles(p_goal):
 				if (p > p_goal):
 					# if we exceed the goal, consecutive values will only grow
 					break
-				elif (p == p_goal):
-					goal_triangles.add(Triangle(a,b,c))
-	return goal_triangles
+				else:
+					# if triangle is <= goal then store it
+					triangles.add(Triangle(a,b,c))
 
-for i in range(1,1000):
-	s = get_triangles(i)
-	if len(s):
-		print(i, s)
+	return triangles
+
+# count the number of values in the set for each perimeter goal
+counts = {}
+triangles = get_triangles(1000)
+for t in triangles:
+	counts[sum(t)] = counts.get(sum(t), 0) + 1
+
+# print the dictionary entry with the maximum value (count)
+print(max(counts.items(), key=lambda x: x[1]))
