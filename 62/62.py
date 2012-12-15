@@ -24,7 +24,7 @@ class CubeIterator(object):
 	def __init__(self):
 		self.seen_cubes = set()
 
-		tee = itertools.tee(self.cubes(), 2)
+		tee = itertools.tee(self.cubes_faster(), 2)
 
 		self.cube_gen = tee[0]
 		self.cache_gen = LookAheadGenerator(tee[1])
@@ -47,6 +47,15 @@ class CubeIterator(object):
 		for i in itertools.count(0):
 			yield tuple(map(int, str(i**3)))
 
+	def cubes_faster(self):
+		odds = itertools.count(1, 2)
+
+		for count in itertools.count(1):
+			cube = 0
+			for i in range(0,count):
+				cube += next(odds)
+			yield tuple(map(int, str(cube)))
+
 	def advance_seen(self, length):
 		if (self.cache_length >= length):
 			return
@@ -59,10 +68,18 @@ class CubeIterator(object):
 
 cube_iter = CubeIterator()
 for cube in cube_iter:
-	perms = set(itertools.permutations(cube))
-	num_perms = [cube_iter.is_cube(p) for p in perms].count(True)
+	perms = itertools.permutations(cube)
+	#num_perms = [cube_iter.is_cube(p) for p in perms].count(True)
 
-	if (num_perms == 5):
+	counted_perms = set()
+	for p in perms:
+		if (cube_iter.is_cube(p) and not p in counted_perms):
+			counted_perms.add(p)
+
+		if len(counted_perms) > 5:
+			break
+
+	if (len(counted_perms) == 5):
 		print(cube)
 		break
 
