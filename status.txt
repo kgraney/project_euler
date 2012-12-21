@@ -26,6 +26,7 @@
 26,solved
 28,solved
 29,solved
+31,solved
 34,solved
 35,solved
 39,solved
@@ -38,4 +39,5 @@
 62,solved
 67,solved
 79,solved
+81,solved
 92,solved
