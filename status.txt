@@ -34,6 +34,8 @@
 39,solved
 40,solved
 42,solved
+43,solved
+44,solved
 45,solved
 48,solved
 52,solved
