@@ -41,3 +41,6 @@
 79,solved
 81,solved
 92,solved
+116,solved
+117,solved
+267,solved
