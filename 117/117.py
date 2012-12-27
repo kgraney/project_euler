@@ -99,31 +99,22 @@ class TileNode(object):
 					s += line
 		return s
 
+tree = TileNode(None)
+leaves_a = set([tree])
+leaves_b = set([tree])
 
-counts = []
-for tile_choices_local in map(list, zip([BlackTile]*len(tile_choices), tile_choices)):
-	tree = TileNode(None)
-	leaves_a = set([tree])
-	leaves_b = set([tree])
+while not all(x.finished() for x in leaves_b):
+	for leaf in leaves_a:
+		if leaf.children == []:
+			for tile in tile_choices:
+				if not leaf.add_child(tile.get()):
+					break
 
-	while not all(x.finished() for x in leaves_b):
-		for leaf in leaves_a:
-			if leaf.children == []:
-				for tile in set(tile_choices_local):
-					if not leaf.add_child(tile.get()):
-						break
+		leaves_b.remove(leaf)
+		leaves_b |= set(leaf.children)
 
-			leaves_b.remove(leaf)
-			leaves_b |= set(leaf.children)
+	leaves_a = copy.copy(leaves_b)
 
-		leaves_a = copy.copy(leaves_b)
+#print(tree)
+print(tree.num_leaves())
 
-	#print(tree)
-	count = tree.num_leaves() - 1
-	print(tile_choices_local, count)
-	counts.append(count)
-
-	length_map = {}
-	count_map = {}
-
-print(sum(counts))
