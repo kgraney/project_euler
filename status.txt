@@ -24,6 +24,7 @@
 24,solved
 25,solved
 26,solved
+27,solved
 28,solved
 29,solved
 31,solved
