@@ -29,6 +29,7 @@
 29,solved
 30,solved
 31,solved
+32,solved
 33,solved
 34,solved
 35,solved
